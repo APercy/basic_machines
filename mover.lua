@@ -318,7 +318,7 @@ minetest.register_node("basic_machines:mover", {
 	can_dig = function(pos, player) -- dont dig if upgrades inside, cause they will be destroyed
 		local meta = minetest.get_meta(pos);
 		local inv = meta:get_inventory();
-		return inv:is_empty("upgrade")
+		return inv:is_empty("upgrade") and inv:is_empty("filter")
 	end,
 	
 	

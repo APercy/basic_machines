@@ -27,25 +27,31 @@ local function round(x)
 end
 
 
-local ball_spawner_update_form = function (pos)
-	
+local ball_spawner_update_form = function (pos,damage)
+		
+  
 		local meta = minetest.get_meta(pos);
 		local x0,y0,z0;
 		x0=meta:get_int("x0");y0=meta:get_int("y0");z0=meta:get_int("z0"); -- direction of velocity
 		
 		local energy,bounce,g,puncheable, gravity,hp,hurt,solid;
-		local speed = meta:get_float("speed"); -- if positive sets initial ball speed
+		local speed = meta:get_float("speed"); -- if positive sets initial ball speed 
 		energy = meta:get_float("energy"); -- if positive activates, negative deactivates, 0 does nothing
 		bounce = meta:get_int("bounce"); -- if nonzero bounces when hit obstacle, 0 gets absorbed
 		gravity = meta:get_float("gravity");  -- gravity
 		hp = meta:get_float("hp");
 		hurt = meta:get_float("hurt");
-		puncheable = meta:get_int("puncheable"); -- if 1 can be punched by players in protection, if 2 can be punched by anyone
+		puncheable = meta:get_int("puncheable"); -- if 1 can be punched by players in protection, if 2 can be punched by anyone 
 		solid = meta:get_int("solid"); -- if 1 then entity is solid - cant be walked on
 		
 		local texture = meta:get_string("texture") or  "basic_machines_ball.png";
 		local visual = meta:get_string("visual") or "sprite";
 		local scale =  meta:get_int("scale");
+		local hurtstring = ""
+			
+		if damage then 
+		    hurtstring = "field[1.25,2.5;1,1;hurt;hurt;"..hurt.."]"
+		end
 		
 		local form  = 
 		"size[4.25,4.75]" ..  -- width, height
@@ -57,7 +63,7 @@ local ball_spawner_update_form = function (pos)
 		"field[2.25,1.5;1,1;gravity;gravity;"..gravity.."]"..
 		"field[3.25,1.5;1,1;puncheable;puncheable;"..puncheable.."]"..
 		"field[3.25,2.5;1,1;solid;solid;"..solid.."]"..
-		"field[0.25,2.5;1,1;hp;hp;"..hp.."]".."field[1.25,2.5;1,1;hurt;hurt;"..hurt.."]"..
+		"field[0.25,2.5;1,1;hp;hp;"..hp.."]"..hurtstring..
 		"field[0.25,3.5;4,1;texture;texture;"..minetest.formspec_escape(texture).."]"..
 		"field[0.25,4.5;1,1;scale;scale;"..scale.."]".."field[1.25,4.5;1,1;visual;visual;"..visual.."]"..
 		"button_exit[3.25,4.25;1,1;OK;OK]";
@@ -349,10 +355,14 @@ minetest.register_node("basic_machines:ball_spawner", {
 	sounds = default.node_sound_wood_defaults(),
 	after_place_node = function(pos, placer)
 		local meta = minetest.env:get_meta(pos)
+		local damage = false
 		meta:set_string("owner", placer:get_player_name()); 
 		local privs = minetest.get_player_privs(placer:get_player_name()); if privs.privs then meta:set_int("admin",1) end
 		
-		if privs.machines then meta:set_int("machines",1) end
+		if privs.machines then 
+		      meta:set_int("machines",1)
+		      damage = true
+		end
 		
 		meta:set_float("hurt",0);
 		meta:set_string("texture", "basic_machines_ball.png");
@@ -364,7 +374,7 @@ minetest.register_node("basic_machines:ball_spawner", {
 		meta:set_int("puncheable",0); -- if 0 not puncheable, if 1 can be punched by players in protection, if 2 can be punched by anyone
 		meta:set_int("scale",100);
 		meta:set_string("visual","sprite"); -- sprite/cube OR particle
-		ball_spawner_update_form(pos);
+		ball_spawner_update_form(pos,privs.machines);
 		
 	end,
 
@@ -567,10 +577,11 @@ minetest.register_node("basic_machines:ball_spawner", {
 				meta:set_string ("visual", fields.visual);
 			end
 		
-			ball_spawner_update_form(pos);
+			ball_spawner_update_form(pos,privs.machines);
 		end
 	end,
 	
+	--[[
 	after_dig_node = function(pos, oldnode, oldmetadata, digger)
 		local name = digger:get_player_name();
 		local inv = digger:get_inventory();
@@ -580,7 +591,7 @@ minetest.register_node("basic_machines:ball_spawner", {
 		meta["formspec"]=nil;
 		stack:set_metadata(minetest.serialize(meta));
 		inv:add_item("main",stack);
-	end
+	end]]
 	
 })
 
