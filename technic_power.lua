@@ -375,7 +375,8 @@ minetest.register_node("basic_machines:generator", {
 		local name = placer:get_player_name()
 		local pinv = placer:get_inventory()
 		local match = minetest.find_node_near(pos, machines_genradius, {"basic_machines:generator"})
-		      if match then
+		 
+		      if match and not(minetest.check_player_privs(name, {server=true})) then
 			    
 			    local distance = math.floor(vector.distance(pos, match))
 			    minetest.chat_send_player(name,core.colorize('#FF0000',"##### Magnetic field problem. Distance to next generator must be at least "..machines_genradius.." nodes #####"))

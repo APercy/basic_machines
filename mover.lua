@@ -1515,7 +1515,7 @@ minetest.register_node("basic_machines:clockgen", {
 		local name = placer:get_player_name()
 		local pinv = placer:get_inventory()
 		local match = minetest.find_node_near(pos, machines_clockradius, {"basic_machines:clockgen"})
-		      if match then
+		      if match and not(minetest.check_player_privs(name, {server=true})) then
 			    
 			    local distance = math.floor(vector.distance(pos, match))
 			    minetest.chat_send_player(name,core.colorize('#FF0000',"##### Clockgens disturb each other. Place next one at least "..machines_clockradius.." nodes away #####"))
