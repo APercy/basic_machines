@@ -795,7 +795,11 @@ minetest.register_node("basic_machines:mover", {
 				end
 			
 			else -- if not dig just put it in
-			inv:add_item("main",copystack);
+			if copystack then 
+			      inv:add_item("main",copystack);
+			else
+			      inv:add_item("main",node1.name);
+			end
 			copystack = nil
 			end
 			
