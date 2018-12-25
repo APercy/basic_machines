@@ -673,6 +673,7 @@ minetest.register_node("basic_machines:mover", {
 					end
 					
 					if inv1:contains_item(invName1, stack) then
+						minetest.chat_send_all(">>>  Code Line 676   <<<")
 						inv2:add_item(invName2, stack);
 						inv1:remove_item(invName1, stack);
 					else
@@ -698,8 +699,9 @@ minetest.register_node("basic_machines:mover", {
 				local inv = cmeta:get_inventory();
 				local stack = ItemStack(prefer);
 				
+				
 				if inv:contains_item("main", stack) then
-					inv:remove_item("main", stack);
+					 copystack = inv:remove_item("main", stack);
 				else 
 					return
 				end
@@ -726,6 +728,7 @@ minetest.register_node("basic_machines:mover", {
 			local count = 0;-- check for cactus or tree
 			local dig_up = false; -- digs up node as a tree
 			if dig then 
+				
 				
 				if not source_chest and basic_machines.dig_up_table[node1.name] then dig_up = true end
 				-- do we harvest the node?
@@ -792,7 +795,8 @@ minetest.register_node("basic_machines:mover", {
 				end
 			
 			else -- if not dig just put it in
-			inv:add_item("main",node1.name);
+			inv:add_item("main",copystack);
+			copystack = nil
 			end
 			
 		end	
