@@ -673,7 +673,7 @@ minetest.register_node("basic_machines:mover", {
 					end
 					
 					if inv1:contains_item(invName1, stack) then
-						minetest.chat_send_all(">>>  Code Line 676   <<<")
+						--minetest.chat_send_all(">>>  Code Line 676   <<<")
 						inv2:add_item(invName2, stack);
 						inv1:remove_item(invName1, stack);
 					else
