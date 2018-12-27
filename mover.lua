@@ -377,6 +377,7 @@ minetest.register_node("basic_machines:mover", {
 	
 	mesecons = {effector = {
 		action_on = function (pos, node,ttl) 
+			local copystack = nil
 		
 			if type(ttl)~="number" then ttl = 1 end
 			local meta = minetest.get_meta(pos);
@@ -703,6 +704,7 @@ minetest.register_node("basic_machines:mover", {
 				if inv:contains_item("main", stack) then
 					 copystack = inv:remove_item("main", stack);
 				else 
+					copystack = nil
 					return
 				end
 				
