@@ -674,9 +674,9 @@ minetest.register_node("basic_machines:mover", {
 					end
 					
 					if inv1:contains_item(invName1, stack) then
-						--minetest.chat_send_all(">>>  Code Line 676   <<<")
-						inv2:add_item(invName2, stack);
-						inv1:remove_item(invName1, stack);
+						local copy = inv1:remove_item(invName1, stack);
+						inv2:add_item(invName2, copy);
+						
 					else
 						if upgrade == -1 then -- admin is owner.. just add stuff
 							inv2:add_item(invName2, stack);
