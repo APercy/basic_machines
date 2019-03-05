@@ -836,7 +836,7 @@ minetest.register_node("basic_machines:mover", {
 			end
 		end 
 		if not(source_chest) and not(harvest) then
-			if dig then nodeupdate(pos1) end
+			if dig then minetest.check_for_falling(pos1) end
 			minetest.set_node(pos1, {name = "air"});
 			end
 		end,
@@ -1487,7 +1487,7 @@ minetest.register_chatcommand("clockgen", { -- test: toggle machine running with
 -- CLOCK GENERATOR : periodically activates machine on top of it
 minetest.register_abm({ 
 	nodenames = {"basic_machines:clockgen"},
-	neighbors = {""},
+	neighbors = {},
 	interval = machines_timer,
 	chance = 1,
 	
