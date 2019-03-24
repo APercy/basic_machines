@@ -113,7 +113,7 @@ minetest.register_node("basic_machines:enviro", {
 			
 			local players = minetest.get_connected_players();
 			for _,player in pairs(players) do
-				local pos1 = player:getpos();
+				local pos1 = player:get_pos();
 				local dist = math.sqrt((pos1.x-pos.x)^2 + (pos1.y-pos.y)^2 + (pos1.z-pos.z)^2 );
 				if dist<=r then
 					
@@ -231,7 +231,7 @@ end
 enviro_adjust_physics = function(player) -- adjust players physics/skybox 1 second after various events
 	minetest.after(1, function()
 		if player then
-			local pos = player:getpos(); if not pos then return end
+			local pos = player:get_pos(); if not pos then return end
 			if pos.y > space_start then -- is player in space or not?
 				player:set_physics_override({speed=1,jump=0.5,gravity=0.1}) -- value set for extreme test space spawn
 				local skybox = enviro.skyboxes["space"];
@@ -271,7 +271,7 @@ minetest.register_globalstep(function(dtime)
 		local players = minetest.get_connected_players();
 		for _,player in pairs(players) do
 			local name = player:get_player_name();
-			local pos = player:getpos();
+			local pos = player:get_pos();
 			local inspace=0; if pos.y>space_start then inspace = 1 end
 			local inspace0=enviro_space[name];
 			if inspace~=inspace0 then -- only adjust player enviroment ONLY if change occured ( earth->space or space->earth !)
@@ -364,7 +364,7 @@ minetest.register_on_punchplayer( -- bring gravity closer to normal with each pu
 	function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
 	
 		if player:get_physics_override() == nil then return end
-		local pos = player:getpos(); if pos.y>= space_start then return end
+		local pos = player:get_pos(); if pos.y>= space_start then return end
 		
 		local gravity = player:get_physics_override().gravity;
 		if gravity<1 then

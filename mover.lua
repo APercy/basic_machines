@@ -282,7 +282,7 @@ minetest.register_node("basic_machines:mover", {
 	groups = {cracky=3, mesecon_effector_on = 1},
 	sounds = default.node_sound_wood_defaults(),
 	after_place_node = function(pos, placer)
-		local meta = minetest.env:get_meta(pos)
+		local meta = minetest.get_meta(pos)
 		meta:set_string("infotext", "Mover block. Set it up by punching or right click. Activate it by keypad signal.")
 		meta:set_string("owner", placer:get_player_name()); meta:set_int("public",0);
 		meta:set_int("x0",0);meta:set_int("y0",-1);meta:set_int("z0",0); -- source1
@@ -558,8 +558,8 @@ minetest.register_node("basic_machines:mover", {
 			local finalsound = true;
 			for _,obj in pairs(minetest.get_objects_inside_radius({x=x0+pos.x,y=y0+pos.y,z=z0+pos.z}, r)) do
 				if obj:is_player() then
-					if not minetest.is_protected(obj:getpos(), owner) and (prefer == "" or obj:get_player_name()== prefer) then -- move player only from owners land
-						obj:moveto(pos2, false)
+					if not minetest.is_protected(obj:get_pos(), owner) and (prefer == "" or obj:get_player_name()== prefer) then -- move player only from owners land
+						obj:move_to(pos2, false)
 						teleport_any = true;
 					end
 				else
@@ -589,10 +589,10 @@ minetest.register_node("basic_machines:mover", {
 							end
 							--obj:setacceleration({x=0,y=0,z=0});
 							if finalmove then -- dont move objects like balls to destination after delay
-								minetest.after(times, function () if obj then obj:setvelocity({x=0,y=0,z=0}); obj:moveto(pos2, false) end end); 
+								minetest.after(times, function () if obj then obj:setvelocity({x=0,y=0,z=0}); obj:move_to(pos2, false) end end); 
 							end
 						else
-								obj:moveto(pos2, false)
+								obj:move_to(pos2, false)
 						end
 					end
 					teleport_any = true;
@@ -948,7 +948,7 @@ local function use_keypad(pos,ttl, again) -- position, time to live ( how many t
 			text = string.sub(text,2) ; if not text or text == "" then return end
 			local players = minetest.get_connected_players();
 			for _,player in pairs(players) do
-				local pos1 = player:getpos();
+				local pos1 = player:get_pos();
 				local dist = math.sqrt((pos1.x-tpos.x)^2 + (pos1.y-tpos.y)^2 + (pos1.z-tpos.z)^2 );
 				if dist<=5 then
 					minetest.chat_send_player(player:get_player_name(), text)
@@ -1115,7 +1115,7 @@ minetest.register_node("basic_machines:keypad", {
 	groups = {cracky=3, mesecon_effector_on = 1},
 	sounds = default.node_sound_wood_defaults(),
 	after_place_node = function(pos, placer)
-		local meta = minetest.env:get_meta(pos)
+		local meta = minetest.get_meta(pos)
 		meta:set_string("infotext", "Keypad. Right click to set it up or punch it. Set any password and text \"@\" to work as keyboard.")
 		meta:set_string("owner", placer:get_player_name()); meta:set_int("public",1);
 		meta:set_int("x0",0);meta:set_int("y0",0);meta:set_int("z0",0); -- target
@@ -1181,7 +1181,7 @@ minetest.register_node("basic_machines:detector", {
 	groups = {cracky=3, mesecon_effector_on = 1},
 	sounds = default.node_sound_wood_defaults(),
 	after_place_node = function(pos, placer)
-		local meta = minetest.env:get_meta(pos)
+		local meta = minetest.get_meta(pos)
 		meta:set_string("infotext", "Detector. Right click/punch to set it up.")
 		meta:set_string("owner", placer:get_player_name()); meta:set_int("public",0);
 		meta:set_int("x0",0);meta:set_int("y0",0);meta:set_int("z0",0); -- source1: read
@@ -1586,7 +1586,7 @@ minetest.register_node("basic_machines:distributor", {
 	groups = {cracky=3, mesecon_effector_on = 1},
 	sounds = default.node_sound_wood_defaults(),
 	after_place_node = function(pos, placer)
-		local meta = minetest.env:get_meta(pos)
+		local meta = minetest.get_meta(pos)
 		meta:set_string("infotext", "Distributor. Right click/punch to set it up.")
 		meta:set_string("owner", placer:get_player_name()); meta:set_int("public",0);
 		for i=1,10 do
