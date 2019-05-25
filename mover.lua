@@ -858,6 +858,19 @@ minetest.register_node("basic_machines:mover", {
 	}
 })
 
+
+-- moverfiltercheck
+
+local check_mover_filter = function(mode, filter, mreverse) -- mover input validation, is it correct node
+	if mode == "normal" or mode == "dig" then
+		local nodedef = minetest.registered_nodes[filter]
+		if mreverse==1 and basic_machines.plant_table[filter] then return true end -- allow farming
+		if not nodedef then return false end
+	end
+	return true
+end
+
+
 -- KEYPAD --
 
 local function use_keypad(pos,ttl, again) -- position, time to live ( how many times can signal travel before vanishing to prevent infinite recursion ), do we want to activate again
@@ -1035,7 +1048,9 @@ local function use_keypad(pos,ttl, again) -- position, time to live ( how many t
 			if string.byte(text) == 64 then -- if text starts with @ clear the filter
 				tmeta:set_string("prefer","");
 			else
-				tmeta:set_string("prefer",text);
+				if check_mover_filter(tmeta:get_string("mode"), text,tmeta:get_int("reverse")) then -- mover input validate
+					tmeta:set_string("prefer",text);
+				end
 			end
 			return
 		end
@@ -1284,6 +1299,8 @@ minetest.register_node("basic_machines:detector", {
 	
 	mesecons = {effector = {
 		action_on = function (pos, node,ttl)
+            
+            if type(ttl)~="number" then ttl = 1 end
 			if ttl<0 then return end
 			
 			local meta = minetest.get_meta(pos);
@@ -2158,7 +2175,7 @@ minetest.register_on_player_receive_fields(function(player,formname,fields)
 			return
 		end
 		
-		if fields.OK == "OK" then --yyy
+		if fields.OK == "OK" then
 			
 			local seltab = meta:get_int("seltab");
 			
@@ -2227,7 +2244,9 @@ minetest.register_on_player_receive_fields(function(player,formname,fields)
 				local prefer = fields.prefer or "";
 				if meta:get_string("prefer")~=prefer then
 					prefer = check_abuse(prefer) 
-					meta:set_string("prefer",prefer);
+					if check_mover_filter(meta:get_string("mode"), prefer, meta:get_int("reverse")) then
+						meta:set_string("prefer",prefer);
+					end
 				end
 				
 				--notification
@@ -2297,7 +2316,7 @@ minetest.register_on_player_receive_fields(function(player,formname,fields)
 		if fields.OK == "OK" then
 			local x0,y0,z0,pass,mode;
 			x0=tonumber(fields.x0) or 0;y0=tonumber(fields.y0) or 1;z0=tonumber(fields.z0) or 0
-			pass = fields.pass or ""; mode = fields.mode or 1;
+			pass = fields.pass or ""; mode = tonumber(fields.mode) or 1;
 			
 			if minetest.is_protected({x=pos.x+x0,y=pos.y+y0,z=pos.z+z0},name) then
 				minetest.chat_send_player(name, "KEYPAD: position is protected. aborting.")
