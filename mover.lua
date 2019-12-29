@@ -64,7 +64,7 @@ basic_machines.harvest_table = {
 };
 
 -- set up nodes for plant with reverse on and filter set (for example seeds -> plant) : [nodename] = plant_name
-basic_machines.plant_table  = {["farming:seed_barley"]="farming:barley_1",["farming:beans"]="farming:beanpole_1", -- so it works with farming redo mod
+basic_machines.plant_table = {["farming:seed_barley"]="farming:barley_1",["farming:beans"]="farming:beanpole_1", -- so it works with farming redo mod
 ["farming:blueberries"]="farming:blueberry_1",["farming:carrot"]="farming:carrot_1",["farming:cocoa_beans"]="farming:cocoa_1",
 ["farming:coffee_beans"]="farming:coffee_1",["farming:corn"]="farming:corn_1",["farming:blueberries"]="farming:blueberry_1",
 ["farming:seed_cotton"]="farming:cotton_1",["farming:cucumber"]="farming:cucumber_1",["farming:grapes"]="farming:grapes_1",
@@ -829,7 +829,9 @@ minetest.register_node("basic_machines:mover", {
 		
 		-- REMOVE DIGGED NODE
 		if not(target_chest) then
-			if not drop then minetest.set_node(pos2, {name = node1.name}); end
+			if not drop and not core.registered_craftitems[node1.name] then 
+                           minetest.set_node(pos2, {name = node1.name})
+            end
 			if drop then 
 				local stack = ItemStack(node1.name);
 				minetest.add_item(pos2,stack) -- drops it
