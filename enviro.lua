@@ -11,7 +11,7 @@ enviro.skyboxes = {
 	["caves"]={type = "cavebox", tex = {"black.png","black.png","black.png","black.png","black.png","black.png",}},
 	};
 	
-local space_start = 1100;
+local space_start = 3500;
 local ENABLE_SPACE_EFFECTS = false -- enable damage outside protected areas
 	
 local enviro_update_form = function (pos)
