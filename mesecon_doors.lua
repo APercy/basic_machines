@@ -29,7 +29,7 @@ local function door_signal_overwrite(name)
 	 minetest.register_node(":"..name, table2)
 end 
 
-minetest.after(0,function()
+--[[minetest.after(0,function()
 	door_signal_overwrite("doors:door_wood");door_signal_overwrite("doors:door_steel")
 	door_signal_overwrite("doors:door_wood_a");door_signal_overwrite("doors:door_wood_b");
 	door_signal_overwrite("doors:door_steel_a");door_signal_overwrite("doors:door_steel_b");
@@ -40,7 +40,7 @@ minetest.after(0,function()
 	door_signal_overwrite("doors:trapdoor_steel");door_signal_overwrite("doors:trapdoor_steel_open");
 	
 	end
-);
+);]]--
 
 local function make_it_noclip(name)
 	
@@ -53,10 +53,10 @@ local function make_it_noclip(name)
 	minetest.register_node(":"..name, table2)
 end 
 
-minetest.after(0,function()
+--[[minetest.after(0,function()
 	make_it_noclip("doors:trapdoor_open");
 	make_it_noclip("doors:trapdoor_steel_open");
-end);
+end);]]--
 
 
 
@@ -93,10 +93,30 @@ local function make_it_nondiggable_but_removable(name, dropname)
 	minetest.register_node(":"..name, table2)
 end 
 
-minetest.after(0,function()
+--[[minetest.after(0,function()
 	make_it_nondiggable_but_removable("doors:door_steel_a","doors:door_steel");
 	make_it_nondiggable_but_removable("doors:door_steel_b","doors:door_steel");
 	
 	make_it_nondiggable_but_removable("doors:trapdoor_steel","doors:trapdoor_steel");
 	make_it_nondiggable_but_removable("doors:trapdoor_steel_open","doors:trapdoor_steel");
-end);
+end);]]--
+
+
+
+	door_signal_overwrite("doors:door_wood");door_signal_overwrite("doors:door_steel")
+	door_signal_overwrite("doors:door_wood_a");door_signal_overwrite("doors:door_wood_b");
+	door_signal_overwrite("doors:door_steel_a");door_signal_overwrite("doors:door_steel_b");
+	door_signal_overwrite("doors:door_glass_a");door_signal_overwrite("doors:door_glass_b");
+	door_signal_overwrite("doors:door_obsidian_glass_a");door_signal_overwrite("doors:door_obsidian_glass_b");
+	
+	door_signal_overwrite("doors:trapdoor");door_signal_overwrite("doors:trapdoor_open");
+	door_signal_overwrite("doors:trapdoor_steel");door_signal_overwrite("doors:trapdoor_steel_open");
+
+	make_it_noclip("doors:trapdoor_open");
+	make_it_noclip("doors:trapdoor_steel_open");
+
+	make_it_nondiggable_but_removable("doors:door_steel_a","doors:door_steel");
+	make_it_nondiggable_but_removable("doors:door_steel_b","doors:door_steel");
+	
+	make_it_nondiggable_but_removable("doors:trapdoor_steel","doors:trapdoor_steel");
+	make_it_nondiggable_but_removable("doors:trapdoor_steel_open","doors:trapdoor_steel");
